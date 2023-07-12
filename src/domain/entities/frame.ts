@@ -1,7 +1,7 @@
 import { Photo } from "./photo"
 
 export type Frame = {
-  photos: Photo
+  photos: Photo[]
   page: number
   limit: number
 }

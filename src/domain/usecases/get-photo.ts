@@ -3,12 +3,13 @@ import { Photo } from "../entities/photo";
 
 export interface GetPhoto {
   getFrame: (params: GetPhoto.Params) => Promise<Frame>
-  getPhoto: () => Promise<Photo>
+  getPhoto: (params: GetPhoto.Params) => Promise<Photo>
 }
 
 export namespace GetPhoto {
   export type Params = {
-    page: number
-    limit: number
+    id?: number
+    page?: number
+    limit?: number
   }
 }
