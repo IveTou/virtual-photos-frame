@@ -2,47 +2,25 @@ import { Frame } from "../../domain/entities/frame";
 import { Photo } from "../../domain/entities/photo";
 import { GetPhoto } from "../../domain/usecases/get-photo";
 import { HttpClient } from "../adapters/http/http-client";
+import { PhotoService } from "../adapters/services/photo-service";
 
 export class RemoteGetPhoto implements GetPhoto {
   constructor (
     private readonly httpClient: HttpClient,
-    // private readonly photosService: PhotosService
+    private readonly photosService: PhotoService
   ){}
 
   async getFrame(params: GetPhoto.Params): Promise<Frame> {
-    // TODO: I need a design pattern to transform fetched data into entity type
-    // TODO: to also decouple the data model and API service too
-
-    const data = await this.httpClient.fetch('https://picsum.photos/v2/list')
-
-    const photos: Photo[] = data.map((p: any) =>
-      ({
-        id: p.id,
-        author: p.author,
-        width: p.width,
-        height: p.height,
-        url: p.download_url
-      })
-    )
-
-    const frame: Frame = {
-      photos: photos,
-      page: params.page ?? 1,
-      limit: params.limit ?? 100,
-    }
-
-    return frame
+    const url = this.photosService.getList(params)
+    const data = await this.httpClient.fetch(url)
+    
+    return this.photosService.frameAdapter(data, params)
   }
 
   async getPhoto(params: GetPhoto.Params): Promise<Photo> {
-    const data = await this.httpClient.fetch(`https://picsum.photos/id/${params.id}/info`)
-
-    return {
-      id: data.id,
-      author: data.author,
-      width: data.width,
-      height: data.height,
-      url: data.download_url
-    }
+    const url = this.photosService.getById(params)
+    const data = await this.httpClient.fetch(url)
+    
+    return this.photosService.photoAdapter(data)
   }
 }
