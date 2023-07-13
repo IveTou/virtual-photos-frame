@@ -3,7 +3,7 @@ import { Frame } from "../../domain/entities/frame";
 import { Photo } from "../../domain/entities/photo";
 import { GetPhoto } from "../../domain/usecases/get-photo";
 
-export class LoremPicsumervice implements PhotoService {
+export class LoremPicsumService implements PhotoService {
   constructor(
     private readonly baseUrl: string = 'https://picsum.photos'
   ){}
