@@ -1,8 +1,18 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
+import { WithFetchPhotoProps, withFetchPhotoFactory } from './presentation/main/factories/photo-factory';
 
-function App() {
+interface Props extends WithFetchPhotoProps {
+  children?: React.ReactNode;
+}
+
+function App(props: Props) {
+  const { useGetData } = props
+
+  const [data, error, loading] = useGetData('frame', { limit: 100, page: 1 })
+  console.log('RES', [data, error, loading])
+
   return (
     <div className="App">
       <header className="App-header">
@@ -23,4 +33,4 @@ function App() {
   );
 }
 
-export default App;
+export default withFetchPhotoFactory(App);
