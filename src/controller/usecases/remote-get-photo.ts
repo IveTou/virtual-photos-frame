@@ -1,5 +1,3 @@
-import { Frame } from "../../domain/entities/frame";
-import { Photo } from "../../domain/entities/photo";
 import { GetPhoto } from "../../domain/usecases/get-photo";
 import { HttpClient } from "../adapters/http/http-client";
 import { PhotoService } from "../adapters/services/photo-service";
@@ -10,17 +8,13 @@ export class RemoteGetPhoto implements GetPhoto {
     private readonly photosService: PhotoService
   ){}
 
-  async getFrame(params: GetPhoto.Params): Promise<Frame> {
+  async getFrame(params: GetPhoto.Params): Promise<any> {
     const url = this.photosService.getList(params)
-    const data = await this.httpClient.fetch(url)
-    
-    return this.photosService.frameAdapter(data, params)
+    return this.httpClient.fetch(url)
   }
 
-  async getPhoto(params: GetPhoto.Params): Promise<Photo> {
-    const url = this.photosService.getById(params)
-    const data = await this.httpClient.fetch(url)
-    
-    return this.photosService.photoAdapter(data)
+  async getPhoto(params: GetPhoto.Params): Promise<any> {
+    const url = this.photosService.getById(params)    
+    return this.httpClient.fetch(url)
   }
 }

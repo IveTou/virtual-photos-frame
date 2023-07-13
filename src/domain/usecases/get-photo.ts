@@ -1,9 +1,6 @@
-import { Frame } from "../entities/frame";
-import { Photo } from "../entities/photo";
-
 export interface GetPhoto {
-  getFrame: (params: GetPhoto.Params) => Promise<Frame>
-  getPhoto: (params: GetPhoto.Params) => Promise<Photo>
+  getFrame: (params: GetPhoto.Params) => Promise<any>
+  getPhoto: (params: GetPhoto.Params) => Promise<any>
 }
 
 export namespace GetPhoto {

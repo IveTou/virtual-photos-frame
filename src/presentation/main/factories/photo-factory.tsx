@@ -2,21 +2,23 @@ import { RemoteGetPhoto } from "../../../controller/usecases/remote-get-photo"
 import { GetPhoto } from "../../../domain/usecases/get-photo"
 import { FetchHttpClient } from "../../../infra/http/http-client"
 import { LoremPicsumService } from "../../../infra/services/photo-service"
+import useFetch from "../hooks/useFetch"
 
-interface WithRemoteProps {
-  remoteGetPhoto: GetPhoto
+export interface WithFetchPhotoProps {
+  useGetData: (type: string, params: GetPhoto.Params) => (boolean | undefined)[]
 }
 
-export function withPhotoFactory<T extends WithRemoteProps = WithRemoteProps>(
+export function withFetchPhotoFactory<T extends WithFetchPhotoProps = WithFetchPhotoProps>(
   WrappedComponent: React.ComponentType<T>
 ) {
   const fetchClient = new FetchHttpClient() 
   const loremPicsumService = new LoremPicsumService()
   const remoteGetPhoto = new RemoteGetPhoto(fetchClient, loremPicsumService)
+  // TODO: use Factory pattern to DRY. Bc I don't want to pass service again
+  const useGetData = (type: string, params: GetPhoto.Params) => useFetch(type, remoteGetPhoto, loremPicsumService, params)
 
-  const ComponentWithTheme = (props: Omit<T, keyof WithRemoteProps>) => {
-    const remoteProps = remoteGetPhoto
-    return <WrappedComponent {...remoteProps} {...(props as T)} />
+  const ComponentWithTheme = (props: Omit<T, keyof WithFetchPhotoProps>) => {
+    return <WrappedComponent {...{ useGetData }} {...(props as T)} />
   }
 
   const displayName =
