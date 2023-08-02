@@ -1,11 +1,13 @@
 import { RemoteGetPhoto } from "../../../controller/usecases/remote-get-photo"
+import { Frame } from "../../../domain/entities/frame"
+import { Photo } from "../../../domain/entities/photo"
 import { GetPhoto } from "../../../domain/usecases/get-photo"
 import { FetchHttpClient } from "../../../infra/http/http-client"
 import { LoremPicsumService } from "../../../infra/services/photo-service"
 import useFetch from "../hooks/useFetch"
 
 export interface WithFetchPhotoProps {
-  useGetData: (type: string, params: GetPhoto.Params) => (boolean | undefined)[]
+  useGetData: (type: string, params: GetPhoto.Params) => (Photo | Frame | undefined)[]
 }
 
 export function withFetchPhotoFactory<T extends WithFetchPhotoProps = WithFetchPhotoProps>(

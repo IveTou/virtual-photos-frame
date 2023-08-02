@@ -14,6 +14,7 @@ const Info = (props: Props) => {
   const { photoId } = useLoaderData() as any
   const [data, error, loading] = useGetData('photo', { id: photoId, limit: 100, page: 1 })
 
+  console.log('data: ', data)
   return <h1>Info</h1>
 }
 
