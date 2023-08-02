@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { GetPhoto } from "../../../domain/usecases/get-photo";
 import { PhotoService } from "../../../controller/adapters/services/photo-service";
 import { Photo } from "../../../domain/entities/photo";
@@ -8,11 +8,12 @@ function useFetch(type: string, remote: GetPhoto, service: PhotoService, params:
   const [data, setData] = useState<Photo | Frame | undefined>()
   const [error, setError] = useState()
   const [loading, setLoading] = useState(true)
+  const paramRef = useRef(params)
 
   //TODO: decouple the strategy 
   const strategy = ({
-    photo: { get: () => remote.getPhoto(params), adapter: service.photoAdapter},
-    frame: { get: () => remote.getFrame(params), adapter: service.frameAdapter},
+    photo: { get: () => remote.getPhoto(paramRef.current), adapter: service.photoAdapter},
+    frame: { get: () => remote.getFrame(paramRef.current), adapter: service.frameAdapter},
   })[type]
 
   useEffect(() => {
@@ -27,7 +28,7 @@ function useFetch(type: string, remote: GetPhoto, service: PhotoService, params:
         throw response
       })
       .then(data => {
-        setData(strategy.adapter(data, params))
+        setData(strategy.adapter(data, paramRef.current))
       })
       .catch(error => {
         console.error('Error fetching data:', error)
@@ -36,7 +37,7 @@ function useFetch(type: string, remote: GetPhoto, service: PhotoService, params:
       .finally(() => {
         setLoading(false)
       })
-  }, [])
+  }, [paramRef])
 
   return [data, error, loading]
 }
