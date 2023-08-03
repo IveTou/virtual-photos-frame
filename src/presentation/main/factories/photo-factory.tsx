@@ -10,6 +10,7 @@ export interface WithFetchPhotoProps {
   useGetData: (type: string, params: GetPhoto.Params) => (Photo | Frame | undefined)[]
 }
 
+// TODO: do not use HOC anymore
 export function withFetchPhotoFactory<T extends WithFetchPhotoProps = WithFetchPhotoProps>(
   WrappedComponent: React.ComponentType<T>
 ) {
